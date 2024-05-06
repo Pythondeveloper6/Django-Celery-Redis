@@ -1,0 +1,28 @@
+# setup services 
+version: '3'
+
+services:
+  djangoserver:
+    container_name: backend
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+
+
+  redis:
+    image: redis:latest
+    container_name: redis
+
+
+  celery:
+    container_name: celery
+    build: .
+    command: celery -A project worker -l INFO 
+    restart: always 
+    depends_on:
+      - redis
+
+    
